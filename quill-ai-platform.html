@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quill — AI Writing & Content Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Playfair+Display:ital,wght@0,700;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#09090b;--bg2:#18181b;--bg3:#27272a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);--v:#7c3aed;--v2:#6d28d9;--vl:#a78bfa;--vp:rgba(124,58,237,0.10);--vb:rgba(124,58,237,0.25);--t:#fafafa;--t2:rgba(255,255,255,0.55);--t3:rgba(255,255,255,0.28);--r:8px;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--t);font-size:16px;line-height:1.6;}
+.container{max-width:1080px;margin:0 auto;padding:0 32px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 26px;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s;text-decoration:none;}
+.btn-p{background:var(--v);color:#fff;}.btn-p:hover{background:var(--v2);transform:translateY(-1px);}
+.btn-g{background:transparent;color:var(--t2);border:1px solid var(--border2);}.btn-g:hover{background:rgba(255,255,255,0.04);color:var(--t);}
+.btn-lg{padding:14px 32px;font-size:15px;}.btn-sm{padding:8px 18px;font-size:13px;}
+.tag{display:inline-block;padding:4px 14px;border-radius:20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;}
+nav{position:sticky;top:0;z-index:100;background:rgba(9,9,11,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
+.nav-i{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;max-width:1080px;margin:0 auto;}
+.logo{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;color:var(--t);text-decoration:none;letter-spacing:-0.02em;}
+.logo em{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--vl);}
+.nl{display:flex;align-items:center;gap:28px;}.nl a{font-size:14px;color:var(--t3);text-decoration:none;transition:color 0.2s;}.nl a:hover{color:var(--t);}
+.nc{display:flex;gap:10px;align-items:center;}
+.hero{padding:110px 0 90px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-300px;right:-200px;width:700px;height:700px;background:radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 65%);pointer-events:none;}
+.hi{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;position:relative;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--vp);border:1px solid var(--vb);border-radius:20px;padding:5px 14px;margin-bottom:24px;}
+.edot{width:6px;height:6px;border-radius:50%;background:var(--v);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.8);}}
+.eyebrow span{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;color:var(--vl);}
+.hero h1{font-size:clamp(44px,5.5vw,64px);line-height:1.03;margin-bottom:22px;}
+.hero h1 .l1,.hero h1 .l2{display:block;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.03em;}
+.hero h1 .l3{display:block;font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--t3);font-size:clamp(34px,4.5vw,54px);}
+.hero p{font-size:17px;color:var(--t2);font-weight:300;line-height:1.75;max-width:440px;margin-bottom:36px;}
+.ha{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;}
+.hs{display:flex;gap:36px;}
+.sn{font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:800;color:var(--t);letter-spacing:-0.02em;}
+.sl{font-size:12px;color:var(--t3);margin-top:1px;}
+.dc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+.db{background:var(--bg);padding:12px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+.dd{display:flex;gap:5px;}.dd span{width:9px;height:9px;border-radius:50%;}
+.dt{font-size:11px;font-family:'DM Mono',monospace;color:var(--t3);margin:0 auto;}
+.dbo{padding:22px;}
+.dp{background:var(--vp);border:1px solid var(--vb);border-radius:var(--r);padding:13px 16px;margin-bottom:16px;}
+.dpl{font-size:10px;font-family:'DM Mono',monospace;color:var(--vl);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
+.dp p{font-size:13px;color:rgba(255,255,255,0.65);}
+.do{font-size:14px;color:rgba(255,255,255,0.72);line-height:1.8;}.do strong{color:var(--vl);}.do p{margin-bottom:9px;}.do p:last-child{margin-bottom:0;}
+.df{padding:12px 18px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.dm{font-size:11px;font-family:'DM Mono',monospace;color:var(--t3);}
+.dca{font-size:12px;color:var(--vl);background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;}
+.features{padding:96px 0;}
+.sh{text-align:center;margin-bottom:60px;}
+.sh .tag{background:var(--vp);border:1px solid var(--vb);color:var(--vl);margin-bottom:18px;}
+.sh h2{font-size:clamp(30px,3.5vw,44px);margin-bottom:14px;}
+.sh p{font-size:16px;color:var(--t2);max-width:500px;margin:0 auto;}
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:14px;overflow:hidden;}
+.fc{background:var(--bg);padding:34px 30px;transition:background 0.2s;}.fc:hover{background:var(--bg2);}
+.fi{width:46px;height:46px;background:var(--vp);border:1px solid var(--vb);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:18px;}
+.fc h3{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:700;margin-bottom:8px;color:var(--t);}
+.fc p{font-size:13px;color:var(--t3);line-height:1.65;}
+.tools-sec{padding:96px 0;}
+.ti{display:grid;grid-template-columns:1fr 1.6fr;gap:72px;align-items:start;}
+.tt h2{font-size:clamp(28px,3.2vw,40px);margin-bottom:18px;}
+.tt p{font-size:15px;color:var(--t2);line-height:1.75;margin-bottom:32px;}
+.tl{list-style:none;}.tl li{padding:11px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;font-size:14px;color:var(--t3);cursor:pointer;transition:color 0.15s;}
+.tl li:hover,.tl li.active{color:var(--vl);}
+.tn{font-family:'DM Mono',monospace;font-size:11px;width:22px;flex-shrink:0;}.tl li.active .tn{color:var(--vl);}
+.dash{background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.dn{background:var(--bg2);padding:12px 18px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border);}
+.dlogo{font-family:'Bricolage Grotesque',sans-serif;font-size:15px;font-weight:800;color:var(--t);}
+.dlogo em{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--vl);}
+.dplan{margin-left:auto;font-family:'DM Mono',monospace;font-size:10px;color:var(--vl);background:var(--vp);border:1px solid var(--vb);padding:3px 10px;border-radius:10px;}
+.dcred{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;}
+.dbody{padding:18px;}
+.dtg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
+.dtool{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 12px;cursor:pointer;transition:border-color 0.15s;}
+.dtool:hover,.dtool.active{border-color:var(--v);}
+.dti{font-size:18px;margin-bottom:6px;}.dtn{font-size:11px;color:rgba(255,255,255,0.7);font-weight:500;}.dtd{font-size:10px;color:var(--t3);margin-top:1px;}
+.ded{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px;}
+.deh{display:flex;justify-content:space-between;margin-bottom:10px;}
+.del{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;}
+.dinp{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:10px 13px;color:rgba(255,255,255,0.75);font-size:13px;font-family:'DM Sans',sans-serif;resize:none;margin-bottom:10px;}
+.dinp:focus{outline:none;border-color:var(--v);}
+.dgb{background:var(--v);color:#fff;border:none;border-radius:6px;padding:10px 18px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;width:100%;}
+.dgb:hover{background:var(--v2);}
+.dout{margin-top:12px;padding:12px;background:var(--bg);border:1px solid var(--border);border-radius:6px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.7;display:none;}
+.dout.show{display:block;}
+.pricing{padding:96px 0;background:var(--bg2);}
+.pg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:880px;margin:0 auto;}
+.pc{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:34px 30px;position:relative;transition:transform 0.2s,border-color 0.2s;}
+.pc:hover{transform:translateY(-3px);}
+.pc.feat{border-color:rgba(124,58,237,0.5);}
+.pc.feat::before{content:'Most popular';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--v);color:#fff;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.07em;padding:4px 14px;border-radius:20px;white-space:nowrap;}
+.pname{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--t3);margin-bottom:18px;}
+.pamt{display:flex;align-items:baseline;gap:3px;margin-bottom:6px;}
+.pdol{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:500;color:var(--t);}
+.pnum{font-family:'Bricolage Grotesque',sans-serif;font-size:54px;font-weight:800;color:var(--t);line-height:1;letter-spacing:-0.03em;}
+.pper{font-size:13px;color:var(--t3);}
+.pdesc{font-size:13px;color:var(--t3);margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border);}
+.pf{list-style:none;margin-bottom:30px;}
+.pf li{font-size:13px;color:rgba(255,255,255,0.65);padding:6px 0;display:flex;align-items:center;gap:9px;}
+.pf li::before{content:'✓';color:var(--vl);font-weight:700;flex-shrink:0;}
+.pf li.off{color:var(--t3);}.pf li.off::before{content:'—';color:var(--border2);}
+.pbtn{width:100%;padding:12px;border-radius:var(--r);font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;transition:all 0.2s;}
+.pbtn-g{background:transparent;color:rgba(255,255,255,0.5);border:1px solid var(--border2);}.pbtn-g:hover{background:rgba(255,255,255,0.04);color:var(--t);}
+.pbtn-p{background:var(--v);color:#fff;}.pbtn-p:hover{background:var(--v2);}
+.testi{padding:96px 0;}
+.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.tc{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:28px;transition:border-color 0.2s;}.tc:hover{border-color:var(--border2);}
+.stars{color:var(--vl);font-size:12px;margin-bottom:14px;}
+.tq{font-size:14px;color:rgba(255,255,255,0.7);line-height:1.75;margin-bottom:20px;font-style:italic;}
+.tq::before{content:'\201C';font-family:'Playfair Display',serif;font-size:44px;color:var(--v);line-height:0.4;display:block;margin-bottom:14px;}
+.ta{display:flex;align-items:center;gap:12px;}
+.tav{width:38px;height:38px;border-radius:50%;background:var(--v);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+.tan{font-size:13px;font-weight:500;color:var(--t);}.tar{font-size:11px;color:var(--t3);}
+.faq{padding:96px 0;background:var(--bg2);}
+.fl{max-width:680px;margin:0 auto;}
+.fi2{border-bottom:1px solid var(--border);}
+.fq{width:100%;text-align:left;padding:20px 0;background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;color:var(--t);display:flex;justify-content:space-between;align-items:center;transition:color 0.2s;}
+.fq:hover{color:var(--vl);}
+.fa2{font-size:16px;color:var(--t3);transition:transform 0.2s;}
+.fa3{font-size:14px;color:var(--t2);line-height:1.75;padding-bottom:18px;display:none;}
+.fi2.open .fa3{display:block;}.fi2.open .fa2{transform:rotate(180deg);}.fi2.open .fq{color:var(--vl);}
+.cta{padding:80px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);text-align:center;}
+.cta h2{font-size:clamp(32px,4vw,48px);margin-bottom:14px;}
+.cta p{font-size:17px;color:var(--t2);margin-bottom:36px;}
+footer{background:var(--bg2);padding:56px 0 28px;border-top:1px solid var(--border);}
+.fti{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;}
+.flogo{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;color:var(--t);display:block;margin-bottom:10px;text-decoration:none;}
+.flogo em{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--vl);}
+.fbrand p{font-size:13px;color:var(--t3);line-height:1.6;}
+.fcol h4{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--t3);font-family:'DM Mono',monospace;margin-bottom:14px;}
+.fcol a{display:block;font-size:13px;color:rgba(255,255,255,0.35);text-decoration:none;margin-bottom:8px;transition:color 0.2s;}.fcol a:hover{color:var(--t);}
+.fb{border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;align-items:center;}
+.fb p{font-size:12px;color:var(--t3);}.fbadge{font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.15);letter-spacing:0.05em;}
+.mo{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;}
+.mo.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:100%;max-width:450px;padding:38px;position:relative;animation:mIn 0.2s ease;}
+@keyframes mIn{from{opacity:0;transform:scale(0.95) translateY(10px);}to{opacity:1;transform:none;}}
+.mc{position:absolute;top:16px;right:18px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--t3);transition:color 0.15s;}.mc:hover{color:var(--t);}
+.modal h2{font-family:'Bricolage Grotesque',sans-serif;font-size:26px;font-weight:800;margin-bottom:6px;letter-spacing:-0.02em;}
+.modal h2 em{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--vl);}
+.msub{font-size:13px;color:var(--t3);margin-bottom:24px;}
+.ps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px;}
+.po{border:1px solid var(--border);border-radius:var(--r);padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.15s;background:var(--bg);}
+.po:hover{border-color:var(--v);}.po.sel{border-color:var(--v);background:var(--vp);}
+.pon{font-size:13px;font-weight:500;color:rgba(255,255,255,0.7);margin-bottom:2px;}.po.sel .pon{color:var(--vl);}
+.pop{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;}
+.fg2{margin-bottom:14px;}.fg2 label{display:block;font-size:12px;font-weight:500;margin-bottom:5px;color:rgba(255,255,255,0.6);}
+.fg2 input{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:14px;background:var(--bg);color:var(--t);transition:border-color 0.2s;}
+.fg2 input:focus{outline:none;border-color:var(--v);}
+.ss{display:none;margin-top:4px;}.ss.show{display:block;}
+.sf{border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:10px;background:var(--bg);}
+.sl2{font-size:10px;color:var(--t3);font-family:'DM Mono',monospace;margin-bottom:5px;}
+.si{width:100%;border:none;background:transparent;font-size:14px;font-family:'DM Mono',monospace;color:var(--t);}
+.sr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sp{text-align:center;font-size:11px;color:var(--t3);margin-top:6px;}
+.mb{width:100%;padding:13px;background:var(--v);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;margin-top:6px;}
+.mb:hover{background:var(--v2);}
+.mt{font-size:11px;color:var(--t3);text-align:center;margin-top:10px;}.mt a{color:var(--vl);text-decoration:none;}
+.succ{display:none;text-align:center;padding:16px 0;}.succ.show{display:block;}
+.si2{font-size:44px;margin-bottom:14px;}
+.succ h3{font-family:'Bricolage Grotesque',sans-serif;font-size:22px;font-weight:800;margin-bottom:6px;}
+.succ p{font-size:13px;color:var(--t3);}
+.app{display:none;min-height:100vh;background:var(--bg);}.app.show{display:flex;}
+.asb{width:230px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;}
+.ast{padding:20px;}
+.aslogo{font-family:'Bricolage Grotesque',sans-serif;font-size:20px;font-weight:800;color:var(--t);display:block;padding-bottom:18px;border-bottom:1px solid var(--border);text-decoration:none;}
+.aslogo em{font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--vl);}
+.ans{padding:16px 20px 6px;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.2);}
+.an{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;color:rgba(255,255,255,0.4);cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;}
+.an:hover{color:rgba(255,255,255,0.75);background:rgba(255,255,255,0.02);}.an.active{color:var(--t);background:rgba(124,58,237,0.07);border-left-color:var(--v);}
+.ani{font-size:15px;}
+.acr{margin:auto 16px 20px;background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:12px;}
+.acrl{font-size:11px;color:var(--t3);margin-bottom:6px;}
+.acrb{background:var(--bg3);border-radius:3px;height:3px;margin-bottom:5px;overflow:hidden;}
+.acrf{height:100%;background:var(--v);border-radius:3px;transition:width 0.3s;}
+.acrn{font-size:11px;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace;}
+.am{flex:1;padding:28px;overflow-y:auto;}
+.ah{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;}
+.ah h1{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;color:var(--t);letter-spacing:-0.02em;}
+.ah p{font-size:13px;color:var(--t3);margin-top:2px;}
+.ub{display:flex;align-items:center;gap:10px;}
+.uav{width:34px;height:34px;border-radius:50%;background:var(--v);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;}
+.un{font-size:13px;color:var(--t);}.up{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;}
+.atg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:24px;}
+.atc{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;cursor:pointer;transition:all 0.15s;}
+.atc:hover,.atc.active{border-color:var(--v);background:rgba(124,58,237,0.05);}
+.tci{font-size:22px;margin-bottom:8px;}.tcn{font-size:13px;color:var(--t);font-weight:500;margin-bottom:3px;}.tcd{font-size:11px;color:var(--t3);}
+.gp{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:22px;}
+.gph{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+.gpt{font-size:15px;font-weight:500;color:var(--t);}
+.gptag{font-size:10px;color:var(--vl);background:var(--vp);border:1px solid var(--vb);padding:3px 10px;border-radius:10px;font-family:'DM Mono',monospace;}
+.gl{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:7px;}
+.gta{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;color:rgba(255,255,255,0.8);font-size:13px;font-family:'DM Sans',sans-serif;resize:vertical;min-height:90px;margin-bottom:14px;}
+.gta:focus{outline:none;border-color:var(--v);}
+.gsel{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.gs{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:9px 12px;color:rgba(255,255,255,0.7);font-size:13px;font-family:'DM Sans',sans-serif;}
+.gs:focus{outline:none;border-color:var(--v);}
+.gbtn{background:var(--v);color:#fff;border:none;border-radius:6px;padding:11px 22px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.2s;display:flex;align-items:center;gap:7px;}
+.gbtn:hover{background:var(--v2);}.gbtn:disabled{background:var(--bg3);color:var(--t3);cursor:not-allowed;}
+.oa{margin-top:20px;padding-top:20px;border-top:1px solid var(--border);display:none;}.oa.show{display:block;}
+.oh{display:flex;justify-content:space-between;margin-bottom:10px;}
+.ol{font-size:11px;color:var(--t3);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;}
+.oac{display:flex;gap:6px;}
+.oab{font-size:12px;color:var(--vl);background:none;border:1px solid var(--vb);border-radius:4px;padding:4px 10px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background 0.15s;}
+.oab:hover{background:var(--vp);}
+.ot{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:13px;color:rgba(255,255,255,0.72);line-height:1.8;white-space:pre-wrap;}
+.hs2{margin-top:28px;}
+.ht{font-size:10px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--t3);margin-bottom:12px;}
+.hi2{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;}
+.hit{font-size:12px;color:rgba(255,255,255,0.45);}.him{font-size:10px;color:var(--t3);font-family:'DM Mono',monospace;}
+@media(max-width:768px){.hi,.ti,.fti{grid-template-columns:1fr;}.fg,.tg,.pg{grid-template-columns:1fr;}.nl{display:none;}.atg{grid-template-columns:repeat(2,1fr);}.asb{display:none;}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+.hc>*{animation:fadeUp 0.5s ease both;}
+.hc>*:nth-child(1){animation-delay:0.05s;}.hc>*:nth-child(2){animation-delay:0.12s;}.hc>*:nth-child(3){animation-delay:0.19s;}.hc>*:nth-child(4){animation-delay:0.26s;}.hc>*:nth-child(5){animation-delay:0.33s;}
+</style>
+</head>
+<body>
+<div id="landing">
+<nav><div class="nav-i"><a href="#" class="logo">Quill<em>.</em></a><div class="nl"><a href="#features">Features</a><a href="#tools">Tools</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div><div class="nc"><button class="btn btn-g btn-sm" onclick="openModal('free')">Sign in</button><button class="btn btn-p btn-sm" onclick="openModal('pro')">Start free trial</button></div></div></nav>
+<section class="hero"><div class="container"><div class="hi"><div class="hc"><div class="eyebrow"><span class="edot"></span><span>AI-Powered Writing</span></div><h1><span class="l1">Write <span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--vl);">better</span></span><span class="l2">content</span><span class="l3">in half the time</span></h1><p>Quill uses Claude AI to generate blog posts, ads, emails, product descriptions, social content, and SEO copy — in seconds.</p><div class="ha"><button class="btn btn-p btn-lg" onclick="openModal('free')">Start free — no card needed</button><button class="btn btn-g btn-lg" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth',block:'center'})">See it in action ↓</button></div><div class="hs"><div><div class="sn">6</div><div class="sl">Content tools</div></div><div><div class="sn">10s</div><div class="sl">Avg generation</div></div><div><div class="sn">$9</div><div class="sl">Pro plan/mo</div></div></div></div>
+<div class="dc" id="demo"><div class="db"><div class="dd"><span style="background:#ff5f57"></span><span style="background:#ffbd2e"></span><span style="background:#28ca41"></span></div><div class="dt">quill.ai — live demo</div></div><div class="dbo"><div class="dp"><div class="dpl">Your prompt</div><p>Write a compelling email subject line for a flash sale on running shoes. Energetic tone.</p></div><div class="do"><p><strong>Subject:</strong> ⚡ 48 Hours Only — Your Next PR Starts Today (40% Off)</p><p>Your fastest run is still ahead of you. This weekend only, we're cutting 40% off our entire performance running line.</p><p>Don't lace up for your next race in yesterday's gear.</p></div></div><div class="df"><span class="dm">Generated in 3.2s · Claude AI</span><button class="dca" onclick="openModal('free')">Try it free →</button></div></div></div></div></section>
+
+<section class="features" id="features"><div class="container"><div class="sh"><span class="tag">Why Quill</span><h2><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.03em;">Everything you need to </span><span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:var(--vl);">write faster</span></h2><p>Stop staring at a blank page. Quill turns a simple description into polished, publish-ready content.</p></div><div class="fg"><div class="fc"><div class="fi">✍️</div><h3>Instant generation</h3><p>Describe what you need in plain English. Get professional content back in under 10 seconds.</p></div><div class="fc"><div class="fi">🎯</div><h3>Tone control</h3><p>Professional, casual, persuasive, witty. Tell Quill the tone you need and it nails it every time.</p></div><div class="fc"><div class="fi">🔁</div><h3>Unlimited revisions</h3><p>Not quite right? Add a note and regenerate instantly until the content is exactly what you need.</p></div><div class="fc"><div class="fi">📋</div><h3>Generation history</h3><p>Every piece of content you create is saved automatically. Find, copy, and reuse your best work anytime.</p></div><div class="fc"><div class="fi">⚡</div><h3>6 content types</h3><p>Blog posts, ads, emails, product descriptions, social media, and SEO content — one tool for everything.</p></div><div class="fc"><div class="fi">🔒</div><h3>Privacy first</h3><p>Your prompts and content are never used to train AI models. Your ideas stay yours.</p></div></div></div></section>
+
+<section class="tools-sec" id="tools"><div class="container"><div class="ti"><div class="tt"><span class="tag" style="background:var(--vp);border:1px solid var(--vb);color:var(--vl);margin-bottom:18px;display:inline-block;">6 Powerful Tools</span><h2><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.03em;">One platform,</span><br><span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--vl);">every content need</span></h2><p>From long-form blog posts to punchy social captions — Quill covers the full content spectrum.</p><ul class="tl" id="toolList"><li class="active" onclick="selectTool(0)"><span class="tn">01</span>Blog Post Writer</li><li onclick="selectTool(1)"><span class="tn">02</span>Ad Copy Generator</li><li onclick="selectTool(2)"><span class="tn">03</span>Email Campaigns</li><li onclick="selectTool(3)"><span class="tn">04</span>Product Descriptions</li><li onclick="selectTool(4)"><span class="tn">05</span>Social Media Posts</li><li onclick="selectTool(5)"><span class="tn">06</span>SEO Content</li></ul></div>
+<div class="dash"><div class="dn"><span class="dlogo">Quill<em>.</em></span><span class="dcred">487 credits left</span><span class="dplan">Pro — $9/mo</span></div><div class="dbody"><div class="dtg"><div class="dtool active" id="dt0"><div class="dti">📝</div><div class="dtn">Blog</div><div class="dtd">Long-form</div></div><div class="dtool" id="dt1"><div class="dti">📢</div><div class="dtn">Ads</div><div class="dtd">Convert</div></div><div class="dtool" id="dt2"><div class="dti">📧</div><div class="dtn">Email</div><div class="dtd">Campaigns</div></div><div class="dtool" id="dt3"><div class="dti">🛍️</div><div class="dtn">Product</div><div class="dtd">Listings</div></div><div class="dtool" id="dt4"><div class="dti">📱</div><div class="dtn">Social</div><div class="dtd">Posts</div></div><div class="dtool" id="dt5"><div class="dti">🔍</div><div class="dtn">SEO</div><div class="dtd">Optimize</div></div></div><div class="ded"><div class="deh"><span class="del" id="dashLbl">Blog Post Writer</span><span class="del">1 credit</span></div><textarea class="dinp" rows="2" id="dashInp" placeholder="Describe your content topic..."></textarea><button class="dgb" onclick="mockGen()">✨ Generate Content</button><div class="dout" id="dashOut"><p id="dashOutTxt"></p></div></div></div></div></div></div></section>
+
+<section class="pricing" id="pricing"><div class="container"><div class="sh"><span class="tag">Simple Pricing</span><h2><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.03em;">Start </span><span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:var(--vl);">free.</span><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.03em;"> Scale as you grow.</span></h2><p>No hidden fees, no annual contracts. Cancel or change your plan anytime.</p></div><div class="pg"><div class="pc"><div class="pname">Free</div><div class="pamt"><span class="pdol">$</span><span class="pnum">0</span><span class="pper">/month</span></div><div class="pdesc">Perfect for trying Quill and occasional content needs.</div><ul class="pf"><li>10 generations per month</li><li>All 6 content tools</li><li>7-day generation history</li><li class="off">Tone control</li><li class="off">Priority generation</li><li class="off">API access</li></ul><button class="pbtn pbtn-g" onclick="openModal('free')">Get started free</button></div><div class="pc feat"><div class="pname">Pro</div><div class="pamt"><span class="pdol">$</span><span class="pnum">9</span><span class="pper">/month</span></div><div class="pdesc">For creators and marketers who need consistent, high-quality content.</div><ul class="pf"><li>200 generations per month</li><li>All 6 content tools</li><li>Unlimited history</li><li>Full tone control</li><li>Priority generation</li><li class="off">API access</li></ul><button class="pbtn pbtn-p" onclick="openModal('pro')">Start Pro trial</button></div><div class="pc"><div class="pname">Unlimited</div><div class="pamt"><span class="pdol">$</span><span class="pnum">19</span><span class="pper">/month</span></div><div class="pdesc">For agencies and power users who need content at scale.</div><ul class="pf"><li>Unlimited generations</li><li>All 6 content tools</li><li>Unlimited history</li><li>Full tone control</li><li>Priority generation</li><li>API access</li></ul><button class="pbtn pbtn-g" onclick="openModal('unlimited')">Go Unlimited</button></div></div></div></section>
+
+<section class="testi" id="testimonials"><div class="container"><div class="sh"><span class="tag">Loved by creators</span><h2><span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:var(--vl);">Real results</span><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.03em;"> from real users</span></h2><p>Join thousands of marketers, founders, and creators who write faster with Quill.</p></div><div class="tg"><div class="tc"><div class="stars">★★★★★</div><div class="tq">I used to spend 3 hours writing a single blog post. Now I have a solid draft in 15 minutes. Quill has genuinely changed how I run my business.</div><div class="ta"><div class="tav">SL</div><div><div class="tan">Sarah L.</div><div class="tar">E-commerce founder</div></div></div></div><div class="tc"><div class="stars">★★★★★</div><div class="tq">The ad copy tool alone is worth the price. I run 4 different campaigns and Quill writes fresh variations every week without sounding repetitive.</div><div class="ta"><div class="tav">MR</div><div><div class="tan">Marcus R.</div><div class="tar">Digital marketing manager</div></div></div></div><div class="tc"><div class="stars">★★★★★</div><div class="tq">As a non-native English speaker, Quill gives me the confidence that my content sounds professional. It's like having an editor on demand.</div><div class="ta"><div class="tav">YK</div><div><div class="tan">Yuki K.</div><div class="tar">SaaS founder</div></div></div></div></div></div></section>
+
+<section class="faq" id="faq"><div class="container"><div class="sh"><span class="tag">FAQ</span><h2><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.03em;">Common </span><span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:400;color:var(--vl);">questions</span></h2></div><div class="fl"><div class="fi2"><button class="fq" onclick="tfaq(this)">What AI model does Quill use?<span class="fa2">↓</span></button><div class="fa3">Quill is powered by Anthropic's Claude — one of the most capable and accurate AI models available. Claude produces natural, high-quality writing that doesn't sound robotic.</div></div><div class="fi2"><button class="fq" onclick="tfaq(this)">Is there a free trial for Pro?<span class="fa2">↓</span></button><div class="fa3">Yes — the Free plan gives you 10 generations per month with no credit card required. Try all 6 tools before upgrading to Pro at just $9/month.</div></div><div class="fi2"><button class="fq" onclick="tfaq(this)">Can I cancel anytime?<span class="fa2">↓</span></button><div class="fa3">Absolutely. No contracts or cancellation fees. Cancel from your account settings and you won't be charged again.</div></div><div class="fi2"><button class="fq" onclick="tfaq(this)">Do you use my content to train AI?<span class="fa2">↓</span></button><div class="fa3">No. Your prompts and generated content are never used to train AI models. Your content is private and belongs entirely to you.</div></div><div class="fi2"><button class="fq" onclick="tfaq(this)">Why is Quill only $9/month?<span class="fa2">↓</span></button><div class="fa3">Quill is a focused tool — it does one thing exceptionally well. We don't charge for features you don't need. A targeted writing assistant shouldn't cost as much as a full AI platform.</div></div><div class="fi2"><button class="fq" onclick="tfaq(this)">What counts as one generation?<span class="fa2">↓</span></button><div class="fa3">Each click of Generate uses one credit regardless of output length. A blog post and a social caption both use one generation.</div></div></div></div></section>
+
+<section class="cta"><div class="container"><h2><span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.03em;">Ready to write </span><span style="font-family:'Playfair Display',serif;font-style:italic;font-weight:700;color:var(--vl);">faster?</span></h2><p>Start free today. Upgrade to Pro for $9/month when you're ready.</p><button class="btn btn-p btn-lg" onclick="openModal('free')">Get started free →</button></div></section>
+
+<footer><div class="container"><div class="fti"><div class="fbrand"><a href="#" class="flogo">Quill<em>.</em></a><p>AI-powered writing for creators, marketers, and founders who need great content fast. Powered by Claude AI.</p></div><div class="fcol"><h4>Product</h4><a href="#features">Features</a><a href="#tools">Tools</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div><div class="fcol"><h4>Company</h4><a href="#">About</a><a href="#">Blog</a><a href="#">Contact</a></div><div class="fcol"><h4>Legal</h4><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div><div class="fb"><p>© 2026 Quill AI. All rights reserved.</p><span class="fbadge">Powered by Claude · Built with care</span></div></div></footer>
+</div>
+
+<div class="mo" id="mo" onclick="cmo(event)"><div class="modal"><button class="mc" onclick="closeModal()">×</button><div id="ms1"><h2>Create your <em>account</em></h2><p class="msub">Choose a plan and start writing in seconds.</p><div class="ps"><div class="po" id="pf2" onclick="sp('free')"><div class="pon">Free</div><div class="pop">$0/mo</div></div><div class="po sel" id="pp2" onclick="sp('pro')"><div class="pon">Pro</div><div class="pop">$9/mo</div></div><div class="po" id="pu2" onclick="sp('unlimited')"><div class="pon">Unlimited</div><div class="pop">$19/mo</div></div></div><div class="fg2"><label>Full name</label><input type="text" id="un" placeholder="Your name"/></div><div class="fg2"><label>Email address</label><input type="email" id="ue" placeholder="you@example.com"/></div><div class="fg2"><label>Password</label><input type="password" id="up2" placeholder="Choose a password"/></div><div class="ss" id="sse"><div class="sf"><div class="sl2">Card number</div><input class="si" type="text" placeholder="4242 4242 4242 4242" id="cn" maxlength="19" oninput="fc(this)"/></div><div class="sr"><div class="sf"><div class="sl2">Expiry</div><input class="si" type="text" placeholder="MM / YY" maxlength="7"/></div><div class="sf"><div class="sl2">CVC</div><input class="si" type="text" placeholder="123" maxlength="3"/></div></div><div class="sp">Secured by Stripe</div></div><button class="mb" id="sb" onclick="hs()">Create free account</button><div class="mt">By signing up you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</div></div><div class="succ" id="msucc"><div class="si2">🎉</div><h3>Welcome to <span style="font-family:'Playfair Display',serif;font-style:italic;color:var(--vl);">Quill</span></h3><p>Your account is ready. Let's create something great.</p><button class="mb" style="margin-top:22px;" onclick="enterApp()">Open Quill →</button></div></div></div>
+
+<div class="app" id="appV"><div class="asb"><div class="ast"><a href="#" class="aslogo">Quill<em>.</em></a></div><div class="ans">Create</div><div class="an active" onclick="sn(this)"><span class="ani">✨</span>Generator</div><div class="an" onclick="sn(this)"><span class="ani">📋</span>History</div><div class="an" onclick="sn(this)"><span class="ani">⭐</span>Favorites</div><div class="ans">Account</div><div class="an" onclick="sn(this)"><span class="ani">⚙️</span>Settings</div><div class="an" onclick="sn(this)"><span class="ani">💳</span>Billing</div><div class="an" onclick="exitApp()"><span class="ani">←</span>Sign out</div><div class="acr"><div class="acrl">Credits remaining</div><div class="acrb"><div class="acrf" id="crBar" style="width:87%"></div></div><div class="acrn" id="crNum">174 / 200</div></div></div>
+<div class="am"><div class="ah"><div><h1>Content Generator</h1><p>Choose a tool and describe what you need</p></div><div class="ub"><div class="uav" id="uav">Q</div><div><div class="un" id="uname">User</div><div class="up" id="uplan">Pro · $9/mo</div></div></div></div>
+<div class="atg"><div class="atc active" onclick="sat(this,'Blog Post Writer','📝')"><div class="tci">📝</div><div class="tcn">Blog Post Writer</div><div class="tcd">Long-form articles</div></div><div class="atc" onclick="sat(this,'Ad Copy Generator','📢')"><div class="tci">📢</div><div class="tcn">Ad Copy Generator</div><div class="tcd">Facebook, Google ads</div></div><div class="atc" onclick="sat(this,'Email Campaign','📧')"><div class="tci">📧</div><div class="tcn">Email Campaign</div><div class="tcd">Subject lines & copy</div></div><div class="atc" onclick="sat(this,'Product Description','🛍️')"><div class="tci">🛍️</div><div class="tcn">Product Description</div><div class="tcd">E-commerce listings</div></div><div class="atc" onclick="sat(this,'Social Media Post','📱')"><div class="tci">📱</div><div class="tcn">Social Media Post</div><div class="tcd">Instagram, X, LinkedIn</div></div><div class="atc" onclick="sat(this,'SEO Content','🔍')"><div class="tci">🔍</div><div class="tcn">SEO Content</div><div class="tcd">Optimised for search</div></div></div>
+<div class="gp"><div class="gph"><span class="gpt" id="gt">Blog Post Writer</span><span class="gptag" id="gtag">📝 Blog</span></div><div class="gl">Describe what you want to create</div><textarea class="gta" id="gpr" placeholder="e.g. Write an intro for a blog post about journaling for entrepreneurs. Conversational tone, 200 words."></textarea><div class="gsel"><select class="gs" id="gtn"><option value="">Select tone...</option><option>Professional</option><option>Casual & friendly</option><option>Persuasive</option><option>Witty & humorous</option><option>Inspiring</option><option>Authoritative</option></select><select class="gs" id="gln"><option value="">Select length...</option><option>Short (50–100 words)</option><option>Medium (100–250 words)</option><option>Long (250–500 words)</option></select></div><button class="gbtn" id="gbn" onclick="gen()">✨ Generate</button><div class="oa" id="oa"><div class="oh"><span class="ol">Generated content</span><div class="oac"><button class="oab" onclick="cp()">Copy</button><button class="oab" onclick="gen()">Regenerate</button></div></div><div class="ot" id="ot"></div></div></div>
+<div class="hs2"><div class="ht">Recent generations</div><div id="hl"><div class="hi2"><span class="hit">No generations yet — create your first piece of content above</span><span class="him">—</span></div></div></div></div></div>
+
+<script>
+const TO={'Blog Post Writer':["The Quiet Power of Daily Journaling\n\nMost entrepreneurs treat their mind like a browser with 47 tabs open. Journaling is the equivalent of a clean restart.\n\nTen minutes, a blank page, and honest answers to three questions: What's working? What isn't? What am I avoiding? That last one is where the real work happens.","5 Lessons I Learned Building My First SaaS\n\nThe hardest part of building a software business isn't the code — it's staying focused long enough to find out if the idea actually works.\n\nAfter 18 months of building and iterating, here are the five things I wish someone had told me at the start."],'Ad Copy Generator':["Headline: Stop Writing. Start Publishing.\n\nBody: Your next blog post, ad, or email is one prompt away. Quill turns your ideas into publish-ready content — no writer's block, no blank page, no waiting.\n\nCTA: Try Quill free →","Facebook Ad:\n🚫 Staring at a blank page again?\n✅ Quill writes it for you.\n\nBlog posts. Emails. Ads. All in seconds.\n\n→ 10 free generations. No card needed."],'Email Campaign':["Subject: The email your list has been waiting for\n\nHi [First Name],\n\nWhat we're about to share changes how you'll think about content creation.\n\nHere's what we've built...","Subject: ⚡ 48 hours only\n\nHi [First Name],\n\n40% off Pro for the next 48 hours. No code needed. Just click below."],'Product Description':["The Everyday Carry Wallet\n\nThin enough to forget it's there. Strong enough to last a decade.\n\nFull-grain leather, six card slots, a slim profile that disappears in your front pocket.","Ceramic Pour-Over Coffee Set\n\nFor the mornings that deserve more than a button press.\n\nHand-thrown ceramic, fired at 2300°F. Includes dripper, carafe, and two tasting cups."],'Social Media Post':["Instagram caption:\n\nThe best time to start was six months ago. The second best time is today. 🌱\n\nWhat are you building? Drop it in the comments. 👇\n\n#founder #entrepreneur","LinkedIn post:\n\nUnpopular opinion: your first draft doesn't need to be good. It needs to exist.\n\nDone beats perfect. Every time."],'SEO Content':["H1: Best AI Writing Tools for Small Business in 2026\n\nMeta description: Discover the top AI writing assistants that help small businesses create blog posts, ads, and emails faster.\n\nIntroduction: For small business owners, content creation often falls at the bottom of an overwhelming to-do list. AI writing tools have changed that equation dramatically.","Target keyword: 'how to write product descriptions that sell'\n\nH1: How to Write Product Descriptions That Actually Sell\n\nFeatured snippet: A great product description answers: What is it? Who is it for? Why does it matter? Lead with the benefit. Keep sentences short. End with a clear CTA."]};
+let cp2='pro',cu={n:'',e:'',p:'pro'},rem=174,hist=[],ct='Blog Post Writer',ig=false;
+function openModal(p){cp2=p||'pro';document.getElementById('mo').classList.add('open');document.getElementById('ms1').style.display='block';document.getElementById('msucc').classList.remove('show');sp(cp2);}
+function closeModal(){document.getElementById('mo').classList.remove('open');}
+function cmo(e){if(e.target===document.getElementById('mo'))closeModal();}
+function sp(p){cp2=p;['pf2','pp2','pu2'].forEach(i=>document.getElementById(i).classList.remove('sel'));const m={'free':'pf2','pro':'pp2','unlimited':'pu2'};document.getElementById(m[p]).classList.add('sel');const ss=document.getElementById('sse'),sb=document.getElementById('sb');if(p==='free'){ss.classList.remove('show');sb.textContent='Create free account';}else if(p==='pro'){ss.classList.add('show');sb.textContent='Start Pro — $9/month';}else{ss.classList.add('show');sb.textContent='Go Unlimited — $19/month';}}
+function fc(i){let v=i.value.replace(/\s+/g,'').replace(/[^0-9]/gi,''),m=v.match(/\d{4,16}/g),match=m&&m[0]||'',parts=[];for(let j=0,l=match.length;j<l;j+=4)parts.push(match.substring(j,j+4));i.value=parts.length?parts.join(' '):v;}
+function hs(){const n=document.getElementById('un').value.trim(),e=document.getElementById('ue').value.trim(),pw=document.getElementById('up2').value;if(!n||!e||!pw){alert('Please fill in all fields.');return;}if(!e.includes('@')){alert('Please enter a valid email.');return;}if(pw.length<6){alert('Password must be at least 6 characters.');return;}cu={n,e,p:cp2};const sb=document.getElementById('sb');sb.textContent='Creating your account...';sb.disabled=true;setTimeout(()=>{document.getElementById('ms1').style.display='none';document.getElementById('msucc').classList.add('show');sb.disabled=false;},1200);}
+function enterApp(){closeModal();document.getElementById('landing').style.display='none';document.getElementById('appV').classList.add('show');document.getElementById('uname').textContent=cu.n||'User';document.getElementById('uav').textContent=(cu.n||'U').charAt(0).toUpperCase();const l={free:'Free Plan · 10/mo',pro:'Pro Plan · $9/mo',unlimited:'Unlimited · $19/mo'};document.getElementById('uplan').textContent=l[cp2];rem=cp2==='unlimited'?9999:cp2==='pro'?200:10;uc();}
+function exitApp(){document.getElementById('appV').classList.remove('show');document.getElementById('landing').style.display='block';}
+function sn(el){document.querySelectorAll('.an').forEach(i=>i.classList.remove('active'));el.classList.add('active');}
+function sat(el,name,icon){document.querySelectorAll('.atc').forEach(c=>c.classList.remove('active'));el.classList.add('active');ct=name;document.getElementById('gt').textContent=name;document.getElementById('gtag').textContent=icon+' '+name.split(' ')[0];document.getElementById('oa').classList.remove('show');}
+function uc(){const max=cp2==='unlimited'?200:cp2==='pro'?200:10;const pct=cp2==='unlimited'?95:Math.round((rem/max)*100);document.getElementById('crBar').style.width=Math.min(100,pct)+'%';document.getElementById('crNum').textContent=cp2==='unlimited'?'∞ Unlimited':rem+' / '+max;}
+function gen(){if(ig)return;const pr=document.getElementById('gpr').value.trim();if(!pr){alert('Please describe what you want to create.');return;}if(cp2!=='unlimited'&&rem<=0){alert("You've used all your credits. Please upgrade.");return;}ig=true;const btn=document.getElementById('gbn');btn.textContent='⏳ Generating...';btn.disabled=true;const outs=TO[ct]||TO['Blog Post Writer'];const out=outs[Math.floor(Math.random()*outs.length)];setTimeout(()=>{document.getElementById('ot').textContent=out;document.getElementById('oa').classList.add('show');if(cp2!=='unlimited'){rem=Math.max(0,rem-1);uc();}ah(pr,ct);btn.textContent='✨ Generate';btn.disabled=false;ig=false;},1800);}
+function cp(){const t=document.getElementById('ot').textContent;navigator.clipboard.writeText(t).then(()=>{const b=event.target;b.textContent='Copied!';setTimeout(()=>{b.textContent='Copy';},1500);}).catch(()=>{const r=document.createRange();r.selectNode(document.getElementById('ot'));window.getSelection().removeAllRanges();window.getSelection().addRange(r);document.execCommand('copy');window.getSelection().removeAllRanges();});}
+function ah(pr,tool){hist.unshift({p:pr.substring(0,55)+(pr.length>55?'...':''),t:tool});document.getElementById('hl').innerHTML=hist.slice(0,5).map(h=>`<div class="hi2"><span class="hit">${h.t}: ${h.p}</span><span class="him">just now</span></div>`).join('');}
+function selectTool(idx){document.querySelectorAll('#toolList li').forEach((li,i)=>li.classList.toggle('active',i===idx));for(let i=0;i<6;i++){const d=document.getElementById('dt'+i);if(d)d.classList.toggle('active',i===idx);}const labels=['Blog Post Writer','Ad Copy Generator','Email Campaigns','Product Descriptions','Social Media Posts','SEO Content'];const el=document.getElementById('dashLbl');if(el)el.textContent=labels[idx];}
+function mockGen(){const inp=document.getElementById('dashInp').value.trim();const btn=event.target;btn.textContent='Generating...';btn.disabled=true;setTimeout(()=>{const out=document.getElementById('dashOut');out.classList.add('show');document.getElementById('dashOutTxt').textContent=inp?'"'+inp.charAt(0).toUpperCase()+inp.slice(1)+'"\n\nHere\'s what Quill generates — polished and publish-ready. Sign up free to see the full output.':'Sample: "Unlock 40% more productivity with our AI-powered workflow tool — trusted by 10,000+ teams. Start your free trial today."';btn.textContent='✨ Generate Content';btn.disabled=false;},1200);}
+function tfaq(btn){const item=btn.parentElement;const was=item.classList.contains('open');document.querySelectorAll('.fi2').forEach(i=>i.classList.remove('open'));if(!was)item.classList.add('open');}
+</script>
+</body>
+</html>
